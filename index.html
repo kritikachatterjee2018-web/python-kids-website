@@ -1,0 +1,762 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Learn Python for Kids</title>
+  <!-- NOTE: Skulpt removed as requested (we use a small JS runner instead) -->
+
+  <style>
+    :root{
+      --bg: #f4fbff;
+      --card: #eaf6ff;
+      --accent: #0b67b2;
+      --accent-2: #1e90ff;
+      --soft: #ffffff;
+      --muted: #6b7785;
+    }
+    html,body{height:100%; margin:0; font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif; background:var(--bg); color:#073642;}
+    header{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:white; padding:26px 18px; text-align:center;}
+    header h1{margin:0; font-size:28px; letter-spacing:0.5px;}
+    header p{margin:6px 0 0; opacity:0.95;}
+    nav{display:flex; justify-content:center; gap:18px; padding:12px; background:#f1f8ff; box-shadow: inset 0 -1px 0 rgba(0,0,0,0.03);}
+    nav a{color:var(--accent); text-decoration:none; font-weight:700;}
+    nav a:hover{text-decoration:underline;}
+    .container{max-width:1100px; margin:22px auto; padding:0 18px;}
+
+    /* Hero / Home */
+    .hero{display:grid; grid-template-columns: 1fr 360px; gap:18px; align-items:center;}
+    .hero-card{background:var(--soft); padding:18px; border-radius:12px; box-shadow:0 6px 18px rgba(10,40,80,0.06);}
+    .hero .left h2{margin-top:0;}
+    .start-btn{background:#ff9f1c; border:none; padding:12px 18px; border-radius:10px; color:white; font-weight:800; cursor:pointer;}
+    .start-btn:hover{opacity:0.95}
+
+    /* Badge shelf */
+    .badges{display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+    .badge{background:linear-gradient(90deg,#fff,#f0f8ff); border:2px dashed rgba(11,103,178,0.08); padding:8px 12px; border-radius:12px; display:flex; gap:8px; align-items:center; min-width:150px;}
+    .badge.hidden{opacity:0.35; filter:grayscale(60%);}
+
+    /* Lessons grid */
+    .lessons-grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(330px,1fr)); gap:18px; margin-top:18px;}
+    .lesson-card{
+      background: linear-gradient(180deg,#eaf6ff,#d6efff);
+      border-radius:12px;
+      padding:14px;
+      box-shadow:0 8px 18px rgba(10,40,80,0.06);
+      border-left:8px solid rgba(11,103,178,0.12);
+    }
+    .lesson-card h3{margin:0 0 6px; font-size:18px;}
+    .lesson-card p{margin:6px 0 12px; color:var(--muted); font-size:14px;}
+    .code-box{
+      background:#042028; color:#e6fffa; font-family: "Courier New", monospace; padding:10px; border-radius:8px; min-height:90px; position:relative;
+    }
+    .code-box textarea{
+      width:100%; height:120px; background:transparent; color:inherit; border:none; outline:none; resize:vertical; font-family:inherit; font-size:14px;
+    }
+    .card-actions{display:flex; gap:8px; margin-top:10px; align-items:center;}
+    .run-btn{background:#0b67b2;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:700;}
+    .complete-btn{background:#28a745;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:700;}
+    .small-muted{font-size:13px;color:var(--muted); margin-left:6px;}
+
+    /* Output */
+    .output{background:#fff; border-radius:8px; padding:10px; border:1px solid #e0eefc; margin-top:8px; min-height:36px; color:#073642; font-family: "Courier New", monospace; white-space:pre-wrap;}
+
+    /* Quiz */
+    #quiz .lesson-box{background:linear-gradient(180deg,#fff,#f7fbff); border-left:0; padding:12px; border-radius:10px;}
+    #quiz button{display:inline-block; text-align:left; width:100%; padding:8px; border-radius:8px; border:1px solid #dbeffd; background:white; cursor:pointer;}
+    #quiz button:hover{background:#f1fbff}
+    #quiz p.result{font-weight:800; margin:8px 0 0;}
+
+    footer{margin-top:26px; text-align:center; padding:18px 0; color:var(--muted);}
+    @media(max-width:880px){ .hero{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🐍 Learn Python</h1>
+    <p>Fun, simple lessons and hands-on code — just like magic ✨</p>
+  </header>
+
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#lessons">Lessons</a>
+    <a href="#quiz">Quiz</a>
+  </nav>
+
+  <div class="container">
+
+    <!-- HERO / HOME -->
+    <section id="home" class="hero">
+      <div class="hero-card left">
+        <h2>Welcome young coder! 👋</h2>
+        <p>Python is a friendly language that lets you build games, tell stories with code, and make robots follow your commands. We learn step-by-step with examples you can edit and try.</p>
+        <ul>
+          <li>Short lessons with examples ✅</li>
+          <li>Type & try Python right here 🖊️➡️▶️</li>
+          <li>Earn badges as you complete lessons 🏅</li>
+        </ul>
+        <div style="margin-top:12px;">
+          <button class="start-btn" onclick="document.getElementById('lessons').scrollIntoView({behavior:'smooth'})">🚀 Start Learning</button>
+        </div>
+      </div>
+
+      <div class="hero-card right">
+        <h3 style="margin-top:0;">Your Badges</h3>
+        <div class="badges" id="badgeShelf">
+          <div class="badge" id="badge1"><span style="font-size:20px;">🎖</span><div><strong>Beginner Coder</strong><div class="small-muted">Complete lessons 1–2</div></div></div>
+          <div class="badge hidden" id="badge2"><span style="font-size:20px;">🏅</span><div><strong>Python Explorer</strong><div class="small-muted">Complete lessons 3–4</div></div></div>
+          <div class="badge hidden" id="badge3"><span style="font-size:20px;">🐍</span><div><strong>Python Pro</strong><div class="small-muted">Complete lessons 5–6</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LESSONS -->
+    <section id="lessons" style="margin-top:22px;">
+      <h2 style="margin-bottom:6px;">📚 Lessons (click a lesson to read & try)</h2>
+      <p style="color:var(--muted); margin-top:0;">Each lesson has a small explanation and a code area. Edit the code and press <strong>Run</strong> to see the result.</p>
+
+      <div class="lessons-grid">
+
+        <!-- Lesson 1: Variables -->
+        <div class="lesson-card" id="lesson-1">
+          <h3>Lesson 1 • Variables 🏷️</h3>
+          <p>Variables are like boxes with names. Put something in the box, then use it later.</p>
+
+          <div class="code-box">
+<pre style="margin:0; color:#e6fffa; font-size:13px;"># Try changing the name and run
+name = "Alex"
+age = 11
+print("Hello, " + name + "! You are " + str(age) + " years old.")</pre>
+          </div>
+
+          <div style="margin-top:8px;">
+            <textarea id="code1">name = "Alex"
+age = 11
+print("Hello, " + name + "! You are " + str(age) + " years old.")</textarea>
+            <div class="card-actions">
+              <button class="run-btn" onclick="runPythonFrom('code1','out1')">▶ Run</button>
+              <button class="complete-btn" onclick="completeLesson(1)">✓ Complete Lesson</button>
+              <div class="small-muted">Output:</div>
+            </div>
+            <div id="out1" class="output">(Run output appears here)</div>
+          </div>
+        </div>
+
+        <!-- Lesson 2: Data Types -->
+        <div class="lesson-card" id="lesson-2">
+          <h3>Lesson 2 • Data Types 📦</h3>
+          <p>Python stores different kinds of data: text (strings), numbers, decimals, and True/False (booleans).</p>
+
+          <div class="code-box">
+<pre style="margin:0; color:#e6fffa; font-size:13px;"># Try different values
+city = "Pune"
+score = 95
+pi = 3.14
+is_happy = True
+print(city, score, pi, is_happy)</pre>
+          </div>
+
+          <div style="margin-top:8px;">
+            <textarea id="code2">city = "Pune"
+score = 95
+pi = 3.14
+is_happy = True
+print(city, score, pi, is_happy)</textarea>
+            <div class="card-actions">
+              <button class="run-btn" onclick="runPythonFrom('code2','out2')">▶ Run</button>
+              <button class="complete-btn" onclick="completeLesson(2)">✓ Complete Lesson</button>
+              <div class="small-muted">Output:</div>
+            </div>
+            <div id="out2" class="output">(Run output appears here)</div>
+          </div>
+        </div>
+
+        <!-- Lesson 3: Math -->
+        <div class="lesson-card" id="lesson-3">
+          <h3>Lesson 3 • Math ➕➖✖️➗</h3>
+          <p>Python can do math: add, subtract, multiply, divide. Also floor division and exponents (square).</p>
+
+          <div class="code-box">
+<pre style="margin:0; color:#e6fffa; font-size:13px;">x = 10
+y = 3
+print("Add:", x + y)
+print("Sub:", x - y)
+print("Mul:", x * y)
+print("Div:", x / y)
+print("Floor Div:", x // y)
+print("Square:", x ** 2)</pre>
+          </div>
+
+          <div style="margin-top:8px;">
+            <textarea id="code3">x = 10
+y = 3
+print("Add:", x + y)
+print("Sub:", x - y)
+print("Mul:", x * y)
+print("Div:", x / y)
+print("Floor Div:", x // y)
+print("Square:", x ** 2)</textarea>
+            <div class="card-actions">
+              <button class="run-btn" onclick="runPythonFrom('code3','out3')">▶ Run</button>
+              <button class="complete-btn" onclick="completeLesson(3)">✓ Complete Lesson</button>
+              <div class="small-muted">Output:</div>
+            </div>
+            <div id="out3" class="output">(Run output appears here)</div>
+          </div>
+        </div>
+
+        <!-- Lesson 4: If / Elif / Else -->
+        <div class="lesson-card" id="lesson-4">
+          <h3>Lesson 4 • If / Elif / Else 🚦</h3>
+          <p>Use if, elif and else to let your program choose what to do.</p>
+
+          <div class="code-box">
+<pre style="margin:0; color:#e6fffa; font-size:13px;">score = 85
+if score >= 90:
+    print("Grade A")
+elif score >= 75:
+    print("Grade B")
+else:
+    print("Keep practicing!")</pre>
+          </div>
+
+          <div style="margin-top:8px;">
+            <textarea id="code4">score = 85
+if score >= 90:
+    print("Grade A")
+elif score >= 75:
+    print("Grade B")
+else:
+    print("Keep practicing!")</textarea>
+            <div class="card-actions">
+              <button class="run-btn" onclick="runPythonFrom('code4','out4')">▶ Run</button>
+              <button class="complete-btn" onclick="completeLesson(4)">✓ Complete Lesson</button>
+              <div class="small-muted">Output:</div>
+            </div>
+            <div id="out4" class="output">(Run output appears here)</div>
+          </div>
+        </div>
+
+        <!-- Lesson 5: Loops -->
+        <div class="lesson-card" id="lesson-5">
+          <h3>Lesson 5 • Loops 🔁</h3>
+          <p>Loops repeat actions. Use for when you know how many times, while when you use a condition.</p>
+
+          <div class="code-box">
+<pre style="margin:0; color:#e6fffa; font-size:13px;"># For loop
+for i in range(3):
+    print("Hello", i)
+
+# While loop
+n = 1
+while n <= 3:
+    print("Count:", n)
+    n += 1</pre>
+          </div>
+
+          <div style="margin-top:8px;">
+            <textarea id="code5"># For loop
+for i in range(3):
+    print("Hello", i)
+
+# While loop
+n = 1
+while n <= 3:
+    print("Count:", n)
+    n += 1</textarea>
+            <div class="card-actions">
+              <button class="run-btn" onclick="runPythonFrom('code5','out5')">▶ Run</button>
+              <button class="complete-btn" onclick="completeLesson(5)">✓ Complete Lesson</button>
+              <div class="small-muted">Output:</div>
+            </div>
+            <div id="out5" class="output">(Run output appears here)</div>
+          </div>
+        </div>
+
+        <!-- Lesson 6: Functions -->
+        <div class="lesson-card" id="lesson-6">
+          <h3>Lesson 6 • Functions 🛠️</h3>
+          <p>Functions are little machines: define them once and reuse them whenever you want.</p>
+
+          <div class="code-box">
+<pre style="margin:0; color:#e6fffa; font-size:13px;">def greet(name):
+    print("Hello", name + "!")
+
+greet("Alice")
+greet("Bob")</pre>
+          </div>
+
+          <div style="margin-top:8px;">
+            <textarea id="code6">def greet(name):
+    print("Hello", name + "!")
+
+greet("Alice")
+greet("Bob")</textarea>
+            <div class="card-actions">
+              <button class="run-btn" onclick="runPythonFrom('code6','out6')">▶ Run</button>
+              <button class="complete-btn" onclick="completeLesson(6)">✓ Complete Lesson</button>
+              <div class="small-muted">Output:</div>
+            </div>
+            <div id="out6" class="output">(Run output appears here)</div>
+          </div>
+        </div>
+
+      </div> <!-- end lessons-grid -->
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" style="margin-top:26px;">
+      <h2>🧠 Quick Quiz</h2>
+      <p style="color:var(--muted)">Pick the right answer. Try to complete all, then earn badges by finishing lessons too!</p>
+
+      <div id="q1" class="lesson-box" style="margin-bottom:12px;">
+        <h3>1) Which creates a variable that stores text?</h3>
+        <button onclick="answerQuiz(1,'a')">A. name = 'Alex'</button>
+        <button onclick="answerQuiz(1,'b')">B. 123 = number</button>
+        <button onclick="answerQuiz(1,'c')">C. if True:</button>
+        <p id="qr1" class="result"></p>
+      </div>
+
+      <div id="q2" class="lesson-box" style="margin-bottom:12px;">
+        <h3>2) Which symbol means exponent (square) in Python?</h3>
+        <button onclick="answerQuiz(2,'a')">A. ^</button>
+        <button onclick="answerQuiz(2,'b')">B. **</button>
+        <button onclick="answerQuiz(2,'c')">C. //</button>
+        <p id="qr2" class="result"></p>
+      </div>
+
+      <div id="q3" class="lesson-box">
+        <h3>3) Which loop counts from 0 to 4?</h3>
+        <button onclick="answerQuiz(3,'a')">A. for i in range(5):</button>
+        <button onclick="answerQuiz(3,'b')">B. while i &lt; 5:</button>
+        <button onclick="answerQuiz(3,'c')">C. if i in range(5):</button>
+        <p id="qr3" class="result"></p>
+      </div>
+    </section>
+
+    <footer>
+      © 2025 Learn Python — Made with ❤️
+    </footer>
+  </div>
+
+<script>
+  /*********************
+   * Lightweight "fake Python" runner (no Skulpt)
+   * Supports the simple patterns used in lessons:
+   * - variable assignment (strings & numbers)
+   * - print(...), print with + concatenation
+   * - str(...) to convert to string
+   * - simple arithmetic: + - * /, // (floor), ** (power)
+   * - for i in range(n): ...  and while loops (basic)
+   * - comments starting with #
+   *
+   * This is intentionally small and limited so we don't use Skulpt.
+   *********************/
+
+  function isNumberToken(tok){
+    return /^-?\d+(\.\d+)?$/.test(tok);
+  }
+
+  function tryParseString(token){
+    // returns string if token is a quoted string
+    token = token.trim();
+    if ((token.startsWith('"') && token.endsWith('"')) || (token.startsWith("'") && token.endsWith("'"))){
+      // remove surrounding quotes
+      return token.slice(1,-1);
+    }
+    return null;
+  }
+
+  function replaceVarsInExpr(expr, env){
+    // replace variable names with JSON values (so strings get quoted)
+    // simple approach: for each var in env, replace word-bound occurrences
+    for (const k of Object.keys(env)){
+      const val = env[k];
+      const json = JSON.stringify(val);
+      const re = new RegExp('\\b' + k + '\\b', 'g');
+      expr = expr.replace(re, json);
+    }
+    return expr;
+  }
+
+  function evalMathExpression(expr, env){
+    // handle Python operators -> JS
+    // handle floor division // by replacing a // b with Math.floor((a)/(b))
+    expr = expr.replace(/\*\*/g, ' ** '); // mark ** for later
+    // replace variables with their JSON values
+    expr = replaceVarsInExpr(expr, env);
+
+    // handle ** (power)
+    if (expr.indexOf('**') !== -1){
+      // transform a ** b into Math.pow(a,b) (quick regex)
+      expr = expr.replace(/([^\s]+)\s*\*\*\s*([^\s]+)/g, 'Math.pow($1,$2)');
+    }
+
+    // handle // floor division
+    if (expr.indexOf('//') !== -1){
+      expr = expr.replace(/([^\s]+)\s*\/\/\s*([^\s]+)/g, 'Math.floor(($1)/($2))');
+    }
+
+    // now evaluate with Function (safer than eval in this controlled context)
+    try {
+      // remove any leftover Python str(...) - not expected here
+      const fn = new Function('"use strict"; return (' + expr + ');');
+      return fn();
+    } catch (e) {
+      throw new Error('Math eval error: ' + e.message);
+    }
+  }
+
+  function evaluateToken(token, env){
+    token = token.trim();
+    // string literal?
+    const s = tryParseString(token);
+    if (s !== null) return s;
+    // str(...) wrapper?
+    const m = token.match(/^str\s*\(\s*([^)]+)\s*\)$/);
+    if (m){
+      const inner = m[1].trim();
+      // if variable
+      if (env.hasOwnProperty(inner)){
+        return String(env[inner]);
+      } else {
+        // try to evaluate expression recursively
+        try {
+          const value = evalMathExpression(inner, env);
+          return String(value);
+        } catch(e){
+          return String(inner);
+        }
+      }
+    }
+    // numeric literal?
+    if (isNumberToken(token)) return parseFloat(token);
+
+    // variable?
+    if (env.hasOwnProperty(token)) return env[token];
+
+    // if expression (contains operators), try math eval
+    if (/[\+\-\*\/\%]/.test(token) || token.includes('**') || token.includes('//')) {
+      return evalMathExpression(token, env);
+    }
+
+    // fallback: return token as string
+    return token;
+  }
+
+  function evalPrintArgument(arg, env){
+    // support comma-separated print() args like print(x, y)
+    const parts = splitTopLevel(arg, ',');
+    const outParts = parts.map(p => {
+      const val = evaluateToken(p, env);
+      // convert undefined -> "None" to look python-ish
+      if (val === undefined) return 'None';
+      return String(val);
+    });
+    return outParts.join(' ');
+  }
+
+  // helper to split a string by a separator but ignore separators inside quotes or parentheses
+  function splitTopLevel(str, sep) {
+    const parts = [];
+    let cur = '';
+    let depth = 0;
+    let inSingle = false;
+    let inDouble = false;
+    for (let i=0;i<str.length;i++){
+      const ch = str[i];
+      if (ch === "'" && !inDouble) inSingle = !inSingle;
+      else if (ch === '"' && !inSingle) inDouble = !inDouble;
+      else if (!inSingle && !inDouble){
+        if (ch === '(') depth++;
+        else if (ch === ')') depth = Math.max(0, depth-1);
+      }
+      if (ch === sep && depth === 0 && !inSingle && !inDouble){
+        parts.push(cur);
+        cur = '';
+      } else {
+        cur += ch;
+      }
+    }
+    if (cur !== '') parts.push(cur);
+    return parts;
+  }
+
+  function runPythonFrom(textareaId, outputId) {
+    const code = document.getElementById(textareaId).value;
+    const outEl = document.getElementById(outputId);
+    outEl.innerText = ''; // clear previous
+    const lines = code.split(/\r?\n/);
+    const env = {}; // simple environment for variables
+    const stack = []; // for loops and blocks
+    let i = 0;
+
+    // Preprocess indentation: compute indent level (number of leading spaces)
+    function indentLevel(line){
+      const m = line.match(/^[ \t]*/);
+      return m ? m[0].replace(/\t/g,'    ').length : 0;
+    }
+
+    // Simple interpreter loop supporting:
+    // - assignments: name = expr
+    // - print(...)
+    // - if / elif / else (basic branching)
+    // - for i in range(n): (only positive integer range)
+    // - while condition: (basic condition using env)
+    // - pass/blank/comments
+    // Note: this is intentionally limited for lesson examples.
+
+    // Helper to evaluate a condition expression (returns truthy/falsy)
+    function evalCondition(cond){
+      // replace variables and evaluate math expression, then convert to boolean
+      try {
+        const val = evalMathExpression(cond, env);
+        return Boolean(val);
+      } catch (e) {
+        // fallback: if cond is like name == "Alex"
+        try {
+          // simple equality handling
+          if (cond.includes('==')) {
+            const parts = cond.split('==').map(s=>s.trim());
+            const a = evaluateToken(parts[0], env);
+            const b = evaluateToken(parts[1], env);
+            return String(a) === String(b);
+          }
+        } catch(_) {}
+        return false;
+      }
+    }
+
+    // Execute a block of lines between start..end-1 with current env
+    function executeBlock(startIdx, endIdx){
+      let j = startIdx;
+      while (j < endIdx){
+        const raw = lines[j];
+        const line = raw.replace(/\r/g,'');
+        const trimmed = line.trim();
+        // skip blanks and comments
+        if (trimmed === '' || trimmed.startsWith('#')) { j++; continue; }
+
+        // assignment?
+        const assignMatch = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)$/);
+        if (assignMatch){
+          const name = assignMatch[1];
+          const rhs = assignMatch[2];
+          try {
+            const val = evaluateToken(rhs, env);
+            env[name] = val;
+          } catch(e){
+            env[name] = null;
+          }
+          j++; continue;
+        }
+
+        // print(...)
+        if (trimmed.startsWith('print(') && trimmed.endsWith(')')){
+          const inner = trimmed.substring(6, trimmed.length-1);
+          try {
+            const text = evalPrintArgument(inner, env);
+            outEl.innerText += text + '\n';
+          } catch(e){
+            outEl.innerText += 'Error in print: ' + e.message + '\n';
+          }
+          j++; continue;
+        }
+
+        // simple for loop: for i in range(N):
+        const forMatch = trimmed.match(/^for\s+([A-Za-z_][A-Za-z0-9_]*)\s+in\s+range\s*\(\s*([0-9]+)\s*\)\s*:\s*$/);
+        if (forMatch){
+          const varName = forMatch[1];
+          const count = parseInt(forMatch[2],10);
+          // find block end via indentation
+          const baseIndent = indentLevel(raw);
+          let k = j + 1;
+          while (k < lines.length && (lines[k].trim() === '' || indentLevel(lines[k]) > baseIndent)) k++;
+          // execute loop body count times
+          for (let rep=0; rep<count; rep++){
+            env[varName] = rep;
+            executeBlock(j+1, k);
+          }
+          j = k;
+          continue;
+        }
+
+        // while loops: while condition:
+        const whileMatch = trimmed.match(/^while\s+(.+)\s*:\s*$/);
+        if (whileMatch){
+          const cond = whileMatch[1];
+          const baseIndent = indentLevel(raw);
+          let k = j + 1;
+          while (k < lines.length && (lines[k].trim() === '' || indentLevel(lines[k]) > baseIndent)) k++;
+          // safety: limit iterations to avoid infinite loops
+          let safety = 1000;
+          while (evalCondition(cond) && safety-- > 0){
+            executeBlock(j+1, k);
+          }
+          if (safety<=0) outEl.innerText += 'Warning: loop stopped after 1000 iterations\n';
+          j = k;
+          continue;
+        }
+
+        // if / elif / else handling (basic)
+        const ifMatch = trimmed.match(/^(if|elif)\s+(.+)\s*:\s*$/);
+        if (ifMatch){
+          // find the chain of if/elif/else blocks
+          let blockStart = j;
+          const baseIndent = indentLevel(lines[blockStart]);
+          let k = blockStart;
+          const blocks = []; // {type, cond, bodyStart, bodyEnd}
+          while (k < lines.length){
+            const t = lines[k];
+            const trimmedK = t.trim();
+            const indentK = indentLevel(t);
+            if (indentK !== baseIndent) break;
+            const mIf = trimmedK.match(/^(if|elif)\s+(.+)\s*:\s*$/);
+            const mElse = trimmedK.match(/^else\s*:\s*$/);
+            if (mIf){
+              const typ = mIf[1];
+              const cond = mIf[2];
+              const bodyStart = k+1;
+              // find bodyEnd
+              let bodyEnd = bodyStart;
+              while (bodyEnd < lines.length && (lines[bodyEnd].trim() === '' || indentLevel(lines[bodyEnd]) > baseIndent)) bodyEnd++;
+              blocks.push({type: typ, cond: cond, start: bodyStart, end: bodyEnd});
+              k = bodyEnd;
+              continue;
+            } else if (mElse){
+              const bodyStart = k+1;
+              let bodyEnd = bodyStart;
+              while (bodyEnd < lines.length && (lines[bodyEnd].trim() === '' || indentLevel(lines[bodyEnd]) > baseIndent)) bodyEnd++;
+              blocks.push({type: 'else', cond: null, start: bodyStart, end: bodyEnd});
+              k = bodyEnd;
+              continue;
+            } else break;
+          }
+          // evaluate in order
+          let executed = false;
+          for (const b of blocks){
+            if (b.type === 'if' || b.type === 'elif'){
+              if (!executed && evalCondition(b.cond)){
+                executeBlock(b.start, b.end);
+                executed = true;
+                break;
+              }
+            } else if (b.type === 'else'){
+              if (!executed){
+                executeBlock(b.start, b.end);
+                executed = true;
+                break;
+              }
+            }
+          }
+          j = k;
+          continue;
+        }
+
+        // function definition (very simple): def name(args):
+        const funcMatch = trimmed.match(/^def\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(\s*([A-Za-z0-9_,\s]*)\s*\)\s*:\s*$/);
+        if (funcMatch){
+          const fname = funcMatch[1];
+          const fargs = funcMatch[2].split(',').map(s=>s.trim()).filter(s=>s!=='');
+          // capture function body
+          const baseIndent = indentLevel(lines[j]);
+          let k = j + 1;
+          while (k < lines.length && (lines[k].trim() === '' || indentLevel(lines[k]) > baseIndent)) k++;
+          const bodyStart = j+1;
+          const bodyEnd = k;
+          // store function in env as a special object
+          env[fname] = {__isFunc:true, args: fargs, bodyStart: bodyStart, bodyEnd: bodyEnd};
+          j = k;
+          continue;
+        }
+
+        // function call: name(args)
+        const callMatch = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*\(\s*(.*)\s*\)\s*$/);
+        if (callMatch){
+          const fname = callMatch[1];
+          const argtext = callMatch[2];
+          if (env.hasOwnProperty(fname) && env[fname] && env[fname].__isFunc){
+            const fobj = env[fname];
+            const argParts = splitTopLevel(argtext, ',').map(s=>s.trim()).filter(s=>s!=='');
+            // set up local env for function
+            const savedEnv = Object.assign({}, env);
+            // map arguments
+            for (let idx=0; idx<fobj.args.length; idx++){
+              const argName = fobj.args[idx];
+              const val = argParts[idx] ? evaluateToken(argParts[idx], env) : undefined;
+              env[argName] = val;
+            }
+            // execute function body
+            executeBlock(fobj.bodyStart, fobj.bodyEnd);
+            // restore env (but keep any globals changed intentionally)
+            // simple approach: restore savedEnv but keep newly defined globals
+            for (const k of Object.keys(savedEnv)) env[k] = savedEnv[k];
+            j++; continue;
+          } else {
+            // not a user function; could be print(...) already handled; ignore
+            j++; continue;
+          }
+        }
+
+        // fallback: can't parse -> echo as message
+        outEl.innerText += 'Unsupported line: ' + trimmed + '\n';
+        j++;
+      } // end while
+    } // end executeBlock
+
+    try {
+      executeBlock(0, lines.length);
+    } catch (e){
+      outEl.innerText += 'Runtime error: ' + e.message + '\n';
+    }
+  }
+
+  /********** Badge & Completion logic (temporary) **********/
+  const completed = new Set();
+
+  function completeLesson(n) {
+    if (completed.has(n)) {
+      alert("You already completed Lesson " + n + " — nice! 🎉");
+      return;
+    }
+    completed.add(n);
+    document.getElementById('lesson-' + n).style.borderLeft = "8px solid rgba(40,167,69,0.7)";
+    const btns = document.querySelectorAll('#lesson-' + n + ' .complete-btn');
+    btns.forEach(b => b.innerText = "✓ Completed");
+    updateBadges();
+  }
+
+  function updateBadges(){
+    if (completed.has(1) && completed.has(2)) {
+      document.getElementById('badge1').classList.remove('hidden');
+    }
+    if (completed.has(3) && completed.has(4)) {
+      document.getElementById('badge2').classList.remove('hidden');
+    }
+    if (completed.has(5) && completed.has(6)) {
+      document.getElementById('badge3').classList.remove('hidden');
+    }
+  }
+
+  /********** Quiz logic **********/
+  function answerQuiz(qnum, choice) {
+    const answers = {1:'a', 2:'b', 3:'a'};
+    const resEl = document.getElementById('qr' + qnum);
+    if (choice === answers[qnum]) {
+      resEl.innerText = "✅ Correct!";
+      resEl.style.color = "green";
+    } else {
+      resEl.innerText = "❌ Try again!";
+      resEl.style.color = "red";
+    }
+  }
+
+  /********** Init **********/
+  window.addEventListener('load', () => {
+    document.getElementById('badge2').classList.add('hidden');
+    document.getElementById('badge3').classList.add('hidden');
+  });
+</script>
+</body>
+</html>
